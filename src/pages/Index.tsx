@@ -1,16 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useRef, useState } from "react";
+import { MessageSquare } from "lucide-react";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { Board } from "@/components/kanban/Board";
+import { ChatPanel } from "@/components/kanban/ChatPanel";
+import { Task } from "@/lib/kanban-types";
+import { Button } from "@/components/ui/button";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
+  const [chatOpen, setChatOpen] = useState(false);
+  const tasksRef = useRef<Task[]>([]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <SidebarProvider defaultOpen>
+      <div className="min-h-screen flex w-full bg-background">
+        <AppSidebar />
+        <main className="flex-1 flex flex-col min-w-0 relative">
+          <Board tasksRef={tasksRef} />
+
+          {/* Floating AI chat button */}
+          <Button
+            onClick={() => setChatOpen(true)}
+            size="lg"
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-elegant bg-sidebar-gradient hover:opacity-90 hover:scale-105 transition-smooth p-0 z-20"
+            aria-label="Open AI assistant"
+          >
+            <MessageSquare className="h-6 w-6 text-white" />
+          </Button>
+
+          <ChatPanel open={chatOpen} onOpenChange={setChatOpen} tasksRef={tasksRef} />
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
